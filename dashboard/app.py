@@ -895,10 +895,20 @@ with tabs[9]:
                     vol_stats = chain_engine.get_volume_summary(calls_analyzed, puts_analyzed)
                     
                     c1, c2, c3, c4 = st.columns(4)
-                    c1.metric("Put/Call OI Ratio", f"{oi_stats['put_call_oi_ratio']:.3f}")
-                    c2.metric("Put/Call Vol Ratio", f"{vol_stats['put_call_vol_ratio']:.3f}")
-                    c3.metric("Max Call OI Strike", f"${oi_stats['max_call_oi_strike']:.1f}")
-                    c4.metric("Max Put OI Strike", f"${oi_stats['max_put_oi_strike']:.1f}")
+                    oi_ratio_val = oi_stats.get('put_call_oi_ratio')
+                    vol_ratio_val = vol_stats.get('put_call_vol_ratio')
+                    max_call_strike = oi_stats.get('max_call_oi_strike')
+                    max_put_strike = oi_stats.get('max_put_oi_strike')
+                    
+                    oi_ratio_str = f"{oi_ratio_val:.3f}" if (oi_ratio_val is not None and not pd.isna(oi_ratio_val)) else "N/A"
+                    vol_ratio_str = f"{vol_ratio_val:.3f}" if (vol_ratio_val is not None and not pd.isna(vol_ratio_val)) else "N/A"
+                    max_call_strike_str = f"${max_call_strike:.2f}" if (max_call_strike is not None and not pd.isna(max_call_strike)) else "N/A"
+                    max_put_strike_str = f"${max_put_strike:.2f}" if (max_put_strike is not None and not pd.isna(max_put_strike)) else "N/A"
+                    
+                    c1.metric("Put/Call OI Ratio", oi_ratio_str)
+                    c2.metric("Put/Call Vol Ratio", vol_ratio_str)
+                    c3.metric("Max Call OI Strike", max_call_strike_str)
+                    c4.metric("Max Put OI Strike", max_put_strike_str)
                     
                     st.subheader("Options Chains Data")
                     opt_select = st.radio("Display Chain", ["Calls", "Puts"])
